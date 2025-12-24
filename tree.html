@@ -1,0 +1,1766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decorate the Tree 🎄</title>
+    <style>
+        @font-face {
+            font-family: 'Snell Roundhand';
+            src: url('snell-roundhand/SnellBT-Bold.otf') format('opentype');
+            font-weight: bold;
+        }
+
+        @font-face {
+            font-family: 'Pixel Operator';
+            src: url('PixelOperator.ttf') format('truetype');
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            touch-action: none;
+            position: fixed;
+        }
+
+        body {
+            background: url('assets/bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #333;
+            text-align: center;
+            font-family: 'Snell Roundhand', cursive;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 10px;
+            overflow: hidden;
+            overscroll-behavior: none;
+            -webkit-overflow-scrolling: touch;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Snowfall animation - OPTIMIZED */
+        .snow-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .snow-particle {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: snowfall linear infinite;
+            will-change: transform;
+        }
+
+        @keyframes snowfall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            padding: 10px;
+            overflow: hidden;
+            padding-top: 20px;
+            padding-bottom: 10px;
+        }
+
+        /* Title Image Styling */
+        .title-image {
+            width: min(600px, 85vw);
+            height: auto;
+            max-height: 15vh;
+            object-fit: contain;
+            margin-bottom: 5px;
+            margin-top: 10px;
+            animation: float 6s ease-in-out infinite;
+            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .game-subtitle {
+            font-family: 'Pixel Operator', monospace;
+            font-size: clamp(0.9rem, 2vw, 1.5rem);
+            color: #8B4513;
+            text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.5);
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            padding: 0 10px;
+            white-space: nowrap;
+        }
+
+        /* Main content container */
+        .main-content {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 20px;
+            width: 100%;
+            max-width: 1400px;
+            flex: 1;
+            min-height: 0;
+            max-height: calc(100vh - 150px);
+            overflow: hidden;
+            padding: 5px;
+        }
+
+        /* Decoration area */
+        .decoration-area {
+            flex: 1;
+            min-width: 0;
+            max-width: 50%;
+            position: relative;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 15px;
+            border: 4px solid #8B4513;
+            padding: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        /* Tree container */
+        .tree-container {
+            width: 100%;
+            flex: 1;
+            position: relative;
+            border-radius: 10px;
+            background: rgba(255, 248, 220, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 0;
+            max-height: 100%;
+            touch-action: none;
+            overflow: visible !important;
+        }
+
+        /* Main tree image */
+        .main-tree {
+            width: auto;
+            height: auto;
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+            z-index: 5;
+            pointer-events: none;
+            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
+            object-fit: contain;
+        }
+
+        /* Decoration palette */
+        .decoration-palette {
+            width: min(280px, 30vw);
+            min-width: 250px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            border: 3px solid #8B4513;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            height: 100%;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .decoration-title {
+            font-family: 'Pixel Operator', monospace;
+            font-size: clamp(1rem, 2vw, 1.4rem);
+            color: #8B4513;
+            margin-bottom: 5px;
+            font-weight: bold;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .decoration-items {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            padding: 8px;
+            overflow-y: auto;
+            min-height: 0;
+            flex: 1;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .decoration-item {
+            width: min(70px, 12vw, 12vh);
+            height: min(70px, 12vw, 12vh);
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            cursor: pointer;
+            border-radius: 10px;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            transform: translateZ(0);
+            touch-action: manipulation;
+        }
+
+        .decoration-item:hover {
+            transform: scale(1.1) translateZ(0);
+            border-color: #8B4513;
+            box-shadow: 0 5px 15px rgba(139, 69, 19, 0.3);
+        }
+
+        .decoration-item.active {
+            border-color: #2E8B57;
+            box-shadow: 0 0 10px rgba(46, 139, 87, 0.5);
+            transform: scale(1.05) translateZ(0);
+        }
+
+        /* Control buttons */
+        .control-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+            flex-shrink: 0;
+        }
+
+        .btn {
+            background: linear-gradient(to bottom, #8B4513, #A0522D);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: clamp(0.8rem, 1.5vw, 1rem);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Pixel Operator', monospace;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 2px solid #654321;
+            width: 100%;
+            touch-action: manipulation;
+            flex-shrink: 0;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(139, 69, 19, 0.4);
+            background: linear-gradient(to bottom, #A0522D, #8B4513);
+        }
+
+        .btn-green {
+            background: linear-gradient(to bottom, #2E8B57, #3CB371);
+            border: 2px solid #1e6b42;
+        }
+
+        .btn-green:hover {
+            box-shadow: 0 8px 20px rgba(46, 139, 87, 0.4);
+            background: linear-gradient(to bottom, #3CB371, #2E8B57);
+        }
+
+        .btn-red {
+            background: linear-gradient(to bottom, #DC143C, #FF6347);
+            border: 2px solid #B22222;
+        }
+
+        .btn-red:hover {
+            box-shadow: 0 8px 20px rgba(220, 20, 60, 0.4);
+            background: linear-gradient(to bottom, #FF6347, #DC143C);
+        }
+
+        /* Decorations on tree - UPDATED for rotation */
+        .tree-decoration {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            cursor: move;
+            z-index: 10;
+            transition: border-color 0.2s ease;
+            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.3));
+            touch-action: none;
+            border: 2px dashed transparent;
+            user-select: none;
+            transform-origin: center center;
+            will-change: transform;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .tree-decoration:hover {
+            border-color: rgba(46, 139, 87, 0.5);
+        }
+
+        .tree-decoration.selected {
+            border-color: #2E8B57;
+            z-index: 100;
+        }
+
+        /* Resize handles */
+        .resize-handle {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #2E8B57;
+            border: 2px solid white;
+            border-radius: 50%;
+            cursor: nwse-resize;
+            z-index: 101;
+            display: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transform: translateZ(0);
+            touch-action: none;
+        }
+
+        .resize-handle.tr {
+            top: -8px;
+            right: -8px;
+            cursor: ne-resize;
+        }
+
+        .resize-handle.br {
+            bottom: -8px;
+            right: -8px;
+            cursor: se-resize;
+        }
+
+        .resize-handle.bl {
+            bottom: -8px;
+            left: -8px;
+            cursor: sw-resize;
+        }
+
+        .resize-handle.tl {
+            top: -8px;
+            left: -8px;
+            cursor: nw-resize;
+        }
+
+        /* Rotation handle */
+        .rotate-handle {
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 16px;
+            background: #FFD700;
+            border: 2px solid white;
+            border-radius: 50%;
+            cursor: grab;
+            z-index: 101;
+            display: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transform: translateZ(0);
+            touch-action: none;
+        }
+
+        .rotate-handle:hover {
+            background: #FFED4E;
+        }
+
+        .tree-decoration.selected .resize-handle,
+        .tree-decoration.selected .rotate-handle {
+            display: block;
+        }
+
+        /* Remove button */
+        .remove-btn {
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            width: 24px;
+            height: 24px;
+            background: #DC143C;
+            color: white;
+            border: 2px solid white;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            z-index: 101;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transform: translateZ(0);
+            touch-action: manipulation;
+        }
+
+        .remove-btn:hover {
+            background: #ff4d4d;
+            transform: scale(1.1) translateZ(0);
+        }
+
+        .tree-decoration.selected .remove-btn {
+            display: flex;
+        }
+
+        /* Music controls with animation */
+        .music-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            animation: gentlePulse 3s infinite;
+            padding: 8px;
+            touch-action: manipulation;
+        }
+
+        @keyframes gentlePulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .music-controls:hover {
+            animation-play-state: paused;
+        }
+
+        .music-icon {
+            width: min(50px, 8vw);
+            height: min(50px, 8vw);
+            transition: transform 0.3s ease;
+        }
+
+        .music-controls:hover .music-icon {
+            transform: scale(1.2) rotate(15deg);
+        }
+
+        .music-text {
+            font-family: 'Pixel Operator', monospace;
+            font-size: clamp(0.7rem, 1.5vw, 1rem);
+            color: black;
+            margin-top: 4px;
+            text-align: center;
+            white-space: nowrap;
+        }
+        
+        /* Menu Bar */
+        .menu-bar {
+            position: fixed;
+            top: 15px;
+            left: 4%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            z-index: 100;
+        }
+
+        .menu-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-3px);
+        }
+
+        .menu-icon {
+            width: 50px;
+            height: 50px;
+            transition: transform 0.3s ease;
+        }
+
+        .menu-item:hover .menu-icon {
+            transform: scale(1.1);
+        }
+
+        .menu-text {
+            font-family: 'Pixel Operator', monospace;
+            font-size: 1rem;
+            color: #8B4513;
+            margin-top: 2px;
+        }
+
+        /* Custom scrollbar for decoration items */
+        .decoration-items::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .decoration-items::-webkit-scrollbar-track {
+            background: rgba(139, 69, 19, 0.1);
+            border-radius: 3px;
+        }
+
+        .decoration-items::-webkit-scrollbar-thumb {
+            background: #8B4513;
+            border-radius: 3px;
+        }
+
+        .decoration-items::-webkit-scrollbar-thumb:hover {
+            background: #A0522D;
+        }
+
+        /* ---------- RESPONSIVE BREAKPOINTS ---------- */
+        
+        /* Large Tablets and Small Laptops */
+        @media (max-width: 1199px) {
+            .main-content {
+                gap: 15px;
+                max-height: calc(100vh - 140px);
+            }
+            
+            .decoration-area {
+                max-width: 65%;
+            }
+            
+            .decoration-palette {
+                width: min(250px, 30vw);
+            }
+            
+            .title-image {
+                max-height: 12vh;
+            }
+            
+            .game-subtitle {
+                font-size: clamp(0.8rem, 1.5vw, 1.2rem);
+            }
+        }
+
+        /* iPad Portrait (768px) */
+        @media (max-width: 768px) {
+            .container {
+                padding-top: 15px;
+                padding-bottom: 5px;
+            }
+            
+            .title-image {
+                max-height: 10vh;
+                margin-bottom: 0;
+            }
+            
+            .game-subtitle {
+                margin-bottom: 5px;
+                font-size: 0.9rem;
+            }
+            
+            .main-content {
+                flex-direction: column;
+                max-height: calc(100vh - 120px);
+                gap: 10px;
+            }
+            
+            .decoration-area {
+                max-width: 100%;
+                height: 55vh;
+                flex: none;
+                padding: 8px;
+            }
+            
+            .decoration-palette {
+                width: 100%;
+                height: auto;
+                max-height: 30vh;
+                min-width: auto;
+                flex: none;
+                padding: 10px;
+            }
+            
+            .decoration-items {
+                max-height: 120px;
+            }
+            
+            .menu-bar {
+                top: 10px;
+                left: 10px;
+                padding: 8px;
+                gap: 8px;
+            }
+            
+            .menu-icon {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .menu-text {
+                font-size: 0.6rem;
+            }
+            
+            .music-controls {
+                top: 15px;
+                right: 15px;
+                padding: 6px;
+            }
+            
+            .music-icon {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .tree-decoration {
+                width: 50px;
+                height: 50px;
+            }
+        }
+
+        /* Mobile Landscape */
+        @media (max-width: 896px) and (orientation: landscape) {
+            .container {
+                padding-top: 10px;
+                padding-bottom: 5px;
+            }
+            
+            .title-image {
+                display: none;
+            }
+            
+            .game-subtitle {
+                display: none;
+            }
+            
+            .main-content {
+                flex-direction: row;
+                max-height: calc(100vh - 20px);
+                gap: 10px;
+            }
+            
+            .decoration-area {
+                max-width: 70%;
+                height: 90vh;
+            }
+            
+            .decoration-palette {
+                width: 28%;
+                min-width: 180px;
+                height: 90vh;
+            }
+            
+            .decoration-items {
+                flex-wrap: wrap;
+                max-height: none;
+            }
+            
+            .decoration-item {
+                width: 45px;
+                height: 45px;
+            }
+            
+            .menu-bar {
+                flex-direction: row;
+                top: 10px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: auto;
+                max-width: 90%;
+                overflow-x: auto;
+                white-space: nowrap;
+                height: auto;
+                max-height: 70px;
+            }
+            
+            .menu-item {
+                flex: 0 0 auto;
+                margin-bottom: 0;
+            }
+        }
+
+        /* Mobile Portrait (576px) */
+        @media (max-width: 576px) {
+            .container {
+                padding: 5px;
+                padding-top: 10px;
+            }
+            
+            .title-image {
+                width: min(350px, 90vw);
+                max-height: 8vh;
+            }
+            
+            .game-subtitle {
+                font-size: 0.8rem;
+                margin-bottom: 3px;
+            }
+            
+            .main-content {
+                max-height: calc(100vh - 100px);
+                gap: 8px;
+            }
+            
+            .decoration-area {
+                height: 50vh;
+                padding: 5px;
+            }
+            
+            .decoration-palette {
+                max-height: 25vh;
+                padding: 8px;
+            }
+            
+            .decoration-items {
+                gap: 6px;
+                max-height: 100px;
+            }
+            
+            .decoration-item {
+                width: 45px;
+                height: 45px;
+            }
+            
+            .btn {
+                padding: 8px 15px;
+                font-size: 0.8rem;
+            }
+            
+            .menu-bar {
+                top: 5px;
+                left: 5px;
+                padding: 6px;
+                gap: 6px;
+            }
+            
+            .menu-icon {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .menu-text {
+                font-size: 0.5rem;
+            }
+            
+            .music-controls {
+                top: 10px;
+                right: 10px;
+                padding: 5px;
+            }
+            
+            .music-icon {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .music-text {
+                font-size: 0.6rem;
+            }
+            
+            .tree-decoration {
+                width: 45px;
+                height: 45px;
+            }
+            
+            .resize-handle, .rotate-handle {
+                width: 12px;
+                height: 12px;
+            }
+            
+            .rotate-handle {
+                top: -25px;
+            }
+            
+            .remove-btn {
+                width: 18px;
+                height: 18px;
+                font-size: 10px;
+                top: -8px;
+                right: -8px;
+            }
+        }
+
+        /* Very small phones (375px) */
+        @media (max-width: 375px) {
+            .decoration-item {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .tree-decoration {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .decoration-area {
+                height: 45vh;
+            }
+            
+            .decoration-palette {
+                max-height: 22vh;
+            }
+            
+            .title-image {
+                max-height: 7vh;
+            }
+        }
+
+        /* Tall mobile devices */
+        @media (max-height: 700px) and (orientation: portrait) {
+            .title-image {
+                max-height: 10vh;
+            }
+            
+            .game-subtitle {
+                margin-bottom: 2px;
+            }
+            
+            .decoration-area {
+                height: 55vh;
+            }
+            
+            .decoration-palette {
+                max-height: 25vh;
+            }
+        }
+
+        /* Short mobile devices */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .main-content {
+                max-height: calc(100vh - 10px);
+            }
+            
+            .decoration-area {
+                height: 95vh;
+            }
+            
+            .decoration-palette {
+                height: 95vh;
+            }
+            
+            .menu-bar {
+                max-height: 50px;
+            }
+        }
+
+        /* Prevent text selection */
+        .no-select {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background snow -->
+    <div class="snow-container" id="snowContainer"></div>
+
+    <!-- Music controls -->
+    <div class="music-controls" onclick="toggleMusic()">
+        <img src="assets/stickers/bg-off.png" alt="Music Control" class="music-icon" id="musicIcon">
+        <div class="music-text" id="musicText">Play Music</div>
+    </div>
+
+    <!-- Menu Bar -->
+    <div class="menu-bar">
+        <div class="menu-item" onclick="goToHome()">
+            <img src="assets/stickers/home.png" alt="Home" class="menu-icon">
+            <div class="menu-text">Home</div>
+        </div>
+        <div class="menu-item" onclick="goToLandingPage()">
+            <img src="assets/stickers/snowman.png" alt="Activities" class="menu-icon">
+            <div class="menu-text">Activities</div>
+        </div>
+        <div class="menu-item" onclick="continueToSnowflake()">
+            <img src="assets/stickers/snowing.png" alt="Snowflakes" class="menu-icon">
+            <div class="menu-text">Snowflakes</div>
+        </div>
+        <div class="menu-item" onclick="continueToWish()">
+            <img src="assets/stickers/cake.png" alt="Wish" class="menu-icon">
+            <div class="menu-text">Wish</div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- Title Image -->
+        <img src="assets/title4.png" alt="Decorate the Tree" class="title-image">
+        <p class="game-subtitle">Choose and drop decorations onto the tree!</p>
+        
+        <div class="main-content">
+            <div class="decoration-area">
+                <div class="tree-container" id="treeContainer">
+                    <!-- Main tree image -->
+                    <img src="assets/stickers/tree.png" alt="Christmas Tree" class="main-tree" id="mainTree">
+                    <!-- Decorations will be added here -->
+                </div>
+            </div>
+            
+            <div class="decoration-palette">
+                <div class="decoration-title">Decorations</div>
+                <div class="decoration-items" id="decorationItems">
+                    <!-- Decoration items will be added here -->
+                </div>
+                
+                <div class="control-buttons">
+                    <button class="btn btn-green" onclick="saveTree()">Save Tree</button>
+                    <button class="btn btn-red" onclick="clearAllDecorations()">Clear All</button>
+                    <button class="btn" onclick="resetDecorations()">Reset Decorations</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="bgMusic" loop preload="auto">
+        <source src="assets/audio/background.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        // Music control variables
+        const bgMusic = document.getElementById('bgMusic');
+        const musicIcon = document.getElementById('musicIcon');
+        const musicText = document.getElementById('musicText');
+        let isMusicPlaying = false;
+        
+        // Decoration variables
+        let decorations = [];
+        let selectedDecoration = null;
+        let currentElement = null;
+        let interactionType = null; // 'drag', 'resize', 'rotate'
+        let interactionData = {
+            offsetX: 0,
+            offsetY: 0,
+            initialWidth: 0,
+            initialHeight: 0,
+            initialMouseX: 0,
+            initialMouseY: 0,
+            initialAngle: 0,
+            centerX: 0,
+            centerY: 0,
+            direction: null
+        };
+        
+        // Decoration types using your available stickers
+        const decorationTypes = [
+            { id: 'cake', name: 'Cake', image: 'assets/stickers/cake.png' },
+            { id: 'light', name: 'Light', image: 'assets/stickers/light.png' },
+            { id: 'hat', name: 'Hat', image: 'assets/stickers/hat.png' },
+            { id: 'lollipop', name: 'Lollipop', image: 'assets/stickers/lollipop.png' },
+            { id: 'nozi', name: 'Nozi', image: 'assets/stickers/nozi.png' },
+            { id: 'ribbon_green', name: 'Green Ribbon', image: 'assets/stickers/ribbon_green.png' },
+            { id: 'ribbon_red', name: 'Red Ribbon', image: 'assets/stickers/ribbon_red.png' },
+            { id: 'snow', name: 'Snow', image: 'assets/stickers/snow.png' },
+            { id: 'star', name: 'Star', image: 'assets/stickers/star.png' },
+            { id: 'snowing', name: 'Snowing', image: 'assets/stickers/snowing.png' },
+            { id: 'snowman', name: 'Snowman', image: 'assets/stickers/snowman.png' },
+            { id: 'sock', name: 'Sock', image: 'assets/stickers/sock.png' },
+            { id: 'ball', name: 'Ball', image: 'assets/stickers/ball.png' },
+            { id: 'cookie', name: 'Cookie', image: 'assets/stickers/cookie.png' },
+            { id: 'kkangti', name: 'Kkangti', image: 'assets/stickers/kkangti.png' }
+        ];
+
+        // Performance optimization variables
+        let rafId = null;
+        let lastUpdateTime = 0;
+        const UPDATE_INTERVAL = 16; // ~60fps
+        
+        // Initialize when page loads
+        window.addEventListener('load', () => {
+            // Check URL parameters for music state
+            const urlParams = new URLSearchParams(window.location.search);
+            const musicParam = urlParams.get('music');
+            const timeParam = urlParams.get('time');
+            
+            if (musicParam === 'on' && timeParam) {
+                bgMusic.currentTime = parseFloat(timeParam);
+                setTimeout(() => {
+                    bgMusic.play().then(() => {
+                        isMusicPlaying = true;
+                        updateMusicDisplay();
+                    }).catch(e => console.log("Auto-play prevented"));
+                }, 500);
+            }
+            
+            updateMusicDisplay();
+            createSnowEffect();
+            initializeDecorations();
+            loadSavedDecorations();
+            
+            // Add optimized event listeners
+            document.addEventListener('mousemove', handleInteractionMove);
+            document.addEventListener('touchmove', handleInteractionMove, { passive: false });
+            document.addEventListener('mouseup', handleInteractionEnd);
+            document.addEventListener('touchend', handleInteractionEnd);
+            
+            // Add click listener to deselect when clicking outside
+            document.addEventListener('mousedown', handleBackgroundClick);
+            document.addEventListener('touchstart', handleBackgroundTouch, { passive: false });
+            
+            // Prevent default touch behaviors
+            document.addEventListener('touchstart', (e) => {
+                if (e.target.closest('.tree-decoration') || 
+                    e.target.closest('.decoration-item')) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        });
+
+        function initializeDecorations() {
+            const decorationItems = document.getElementById('decorationItems');
+            
+            decorationTypes.forEach((decoration, index) => {
+                const item = document.createElement('div');
+                item.className = 'decoration-item';
+                item.dataset.type = decoration.id;
+                item.style.backgroundImage = `url(${decoration.image})`;
+                item.title = decoration.name;
+                item.setAttribute('draggable', 'false');
+                
+                item.addEventListener('click', () => {
+                    selectDecorationType(decoration);
+                });
+                
+                // Add touch support
+                item.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    selectDecorationType(decoration);
+                });
+                
+                decorationItems.appendChild(item);
+            });
+            
+            // Select first decoration by default
+            if (decorationTypes.length > 0) {
+                selectDecorationType(decorationTypes[0]);
+            }
+        }
+
+        function selectDecorationType(decoration) {
+            selectedDecoration = decoration;
+            
+            // Update visual selection
+            const items = document.querySelectorAll('.decoration-item');
+            items.forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.type === decoration.id) {
+                    item.classList.add('active');
+                }
+            });
+            
+            // Deselect any selected decoration on tree
+            deselectAllDecorations();
+        }
+
+        function addDecorationToTree(e) {
+            if (!selectedDecoration) return;
+            
+            const treeContainer = document.getElementById('treeContainer');
+            const rect = treeContainer.getBoundingClientRect();
+            
+            // Calculate position relative to tree container
+            let x, y;
+            
+            if (e.type === 'mousedown' || e.type === 'click') {
+                x = e.clientX - rect.left;
+                y = e.clientY - rect.top;
+            } else if (e.type === 'touchstart') {
+                const touch = e.touches[0];
+                x = touch.clientX - rect.left;
+                y = touch.clientY - rect.top;
+            }
+            
+            // Check if click is on the tree
+            const treeImg = document.getElementById('mainTree');
+            const treeRect = treeImg.getBoundingClientRect();
+            const relativeX = x - (rect.width - treeRect.width) / 2;
+            const relativeY = y - (rect.height - treeRect.height) / 2;
+            
+            // Only add decoration if click is on the tree image
+            if (relativeX >= 0 && relativeX <= treeRect.width && 
+                relativeY >= 0 && relativeY <= treeRect.height) {
+                createDecorationElement(x, y);
+            }
+        }
+
+        function createDecorationElement(x, y) {
+            const treeContainer = document.getElementById('treeContainer');
+            
+            // Create decoration element
+            const decorationElement = document.createElement('div');
+            decorationElement.className = 'tree-decoration';
+            decorationElement.dataset.id = Date.now() + Math.random();
+            decorationElement.dataset.type = selectedDecoration.id;
+            decorationElement.style.backgroundImage = `url(${selectedDecoration.image})`;
+            decorationElement.style.left = `${x - 30}px`;
+            decorationElement.style.top = `${y - 30}px`;
+            decorationElement.style.transform = 'rotate(0deg)';
+            
+            // Create resize handles
+            const handles = ['tl', 'tr', 'br', 'bl'];
+            handles.forEach(position => {
+                const handle = document.createElement('div');
+                handle.className = `resize-handle ${position}`;
+                decorationElement.appendChild(handle);
+            });
+            
+            // Create rotation handle
+            const rotateHandle = document.createElement('div');
+            rotateHandle.className = 'rotate-handle';
+            rotateHandle.innerHTML = '↻';
+            decorationElement.appendChild(rotateHandle);
+            
+            // Create remove button
+            const removeBtn = document.createElement('div');
+            removeBtn.className = 'remove-btn';
+            removeBtn.innerHTML = '×';
+            removeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                removeDecoration(decorationElement);
+            });
+            decorationElement.appendChild(removeBtn);
+            
+            // Add event listeners for selection and interaction
+            decorationElement.addEventListener('mousedown', startDecorationInteraction);
+            decorationElement.addEventListener('touchstart', startDecorationInteraction, { passive: false });
+            
+            // Add to tree container
+            treeContainer.appendChild(decorationElement);
+            
+            // Select this decoration
+            selectDecoration(decorationElement);
+            
+            // Add to decorations array
+            decorations.push({
+                id: decorationElement.dataset.id,
+                type: selectedDecoration.id,
+                x: x - 30,
+                y: y - 30,
+                width: 60,
+                height: 60,
+                rotation: 0
+            });
+            
+            // Save to localStorage
+            saveDecorationsToStorage();
+        }
+
+        function startDecorationInteraction(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            
+            const element = e.target.closest('.tree-decoration');
+            if (!element) return;
+            
+            // Check what type of interaction
+            if (e.target.classList.contains('resize-handle')) {
+                startResize(element, e);
+            } else if (e.target.classList.contains('rotate-handle')) {
+                startRotate(element, e);
+            } else {
+                startDrag(element, e);
+            }
+            
+            // Select this decoration
+            selectDecoration(element);
+        }
+
+        function selectDecoration(element) {
+            // Deselect all other decorations
+            deselectAllDecorations();
+            
+            // Select this one
+            element.classList.add('selected');
+            currentElement = element;
+        }
+
+        function deselectAllDecorations() {
+            const decorations = document.querySelectorAll('.tree-decoration');
+            decorations.forEach(dec => {
+                dec.classList.remove('selected');
+            });
+            currentElement = null;
+        }
+
+        function startDrag(element, e) {
+            interactionType = 'drag';
+            currentElement = element;
+            
+            const rect = element.getBoundingClientRect();
+            const treeContainer = document.getElementById('treeContainer');
+            const treeRect = treeContainer.getBoundingClientRect();
+            
+            if (e.type === 'mousedown') {
+                interactionData.offsetX = e.clientX - rect.left;
+                interactionData.offsetY = e.clientY - rect.top;
+            } else if (e.type === 'touchstart') {
+                const touch = e.touches[0];
+                interactionData.offsetX = touch.clientX - rect.left;
+                interactionData.offsetY = touch.clientY - rect.top;
+            }
+            
+            // Start animation loop
+            startInteractionLoop();
+        }
+
+        function startResize(element, e) {
+            interactionType = 'resize';
+            currentElement = element;
+            interactionData.direction = e.target.className.split(' ')[1]; // tl, tr, br, bl
+            
+            const rect = element.getBoundingClientRect();
+            interactionData.initialWidth = rect.width;
+            interactionData.initialHeight = rect.height;
+            
+            if (e.type === 'mousedown') {
+                interactionData.initialMouseX = e.clientX;
+                interactionData.initialMouseY = e.clientY;
+            } else if (e.type === 'touchstart') {
+                const touch = e.touches[0];
+                interactionData.initialMouseX = touch.clientX;
+                interactionData.initialMouseY = touch.clientY;
+            }
+            
+            // Start animation loop
+            startInteractionLoop();
+        }
+
+        function startRotate(element, e) {
+            interactionType = 'rotate';
+            currentElement = element;
+            
+            const rect = element.getBoundingClientRect();
+            interactionData.centerX = rect.left + rect.width / 2;
+            interactionData.centerY = rect.top + rect.height / 2;
+            
+            // Get current rotation
+            const transform = element.style.transform;
+            const match = transform.match(/rotate\(([-\d.]+)deg\)/);
+            interactionData.initialAngle = match ? parseFloat(match[1]) : 0;
+            
+            if (e.type === 'mousedown') {
+                interactionData.initialMouseX = e.clientX;
+                interactionData.initialMouseY = e.clientY;
+            } else if (e.type === 'touchstart') {
+                const touch = e.touches[0];
+                interactionData.initialMouseX = touch.clientX;
+                interactionData.initialMouseY = touch.clientY;
+            }
+            
+            // Start animation loop
+            startInteractionLoop();
+        }
+
+        function startInteractionLoop() {
+            if (rafId) {
+                cancelAnimationFrame(rafId);
+            }
+            lastUpdateTime = performance.now();
+            rafId = requestAnimationFrame(updateInteraction);
+        }
+
+        function updateInteraction(currentTime) {
+            if (!interactionType || !currentElement) {
+                if (rafId) {
+                    cancelAnimationFrame(rafId);
+                    rafId = null;
+                }
+                return;
+            }
+            
+            const deltaTime = currentTime - lastUpdateTime;
+            
+            // Throttle updates to ~60fps
+            if (deltaTime >= UPDATE_INTERVAL) {
+                lastUpdateTime = currentTime;
+                
+                // We update based on the last known mouse/touch position
+                // Actual position updates happen in handleInteractionMove
+            }
+            
+            rafId = requestAnimationFrame(updateInteraction);
+        }
+
+        function handleInteractionMove(e) {
+            if (!interactionType || !currentElement) return;
+            
+            e.preventDefault();
+            
+            let clientX, clientY;
+            
+            if (e.type === 'mousemove') {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            } else if (e.type === 'touchmove' && e.touches[0]) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                return;
+            }
+            
+            // Process based on interaction type
+            switch (interactionType) {
+                case 'drag':
+                    handleDragUpdate(clientX, clientY);
+                    break;
+                case 'resize':
+                    handleResizeUpdate(clientX, clientY);
+                    break;
+                case 'rotate':
+                    handleRotateUpdate(clientX, clientY);
+                    break;
+            }
+        }
+
+        function handleDragUpdate(clientX, clientY) {
+            const treeContainer = document.getElementById('treeContainer');
+            const treeRect = treeContainer.getBoundingClientRect();
+            const elementRect = currentElement.getBoundingClientRect();
+            
+            // Calculate new position with boundaries
+            let newX = clientX - treeRect.left - interactionData.offsetX;
+            let newY = clientY - treeRect.top - interactionData.offsetY;
+            
+            // Keep within tree container
+            newX = Math.max(0, Math.min(newX, treeRect.width - elementRect.width));
+            newY = Math.max(0, Math.min(newY, treeRect.height - elementRect.height));
+            
+            // Apply position
+            currentElement.style.left = `${newX}px`;
+            currentElement.style.top = `${newY}px`;
+            
+            // Update in decorations array
+            const decoration = decorations.find(d => d.id === currentElement.dataset.id);
+            if (decoration) {
+                decoration.x = newX;
+                decoration.y = newY;
+            }
+        }
+
+        function handleResizeUpdate(clientX, clientY) {
+            const treeContainer = document.getElementById('treeContainer');
+            const treeRect = treeContainer.getBoundingClientRect();
+            const elementRect = currentElement.getBoundingClientRect();
+            
+            // Calculate mouse movement
+            const deltaX = clientX - interactionData.initialMouseX;
+            const deltaY = clientY - interactionData.initialMouseY;
+            
+            // Calculate new dimensions (maintain aspect ratio)
+            let newWidth, newHeight;
+            const aspectRatio = interactionData.initialWidth / interactionData.initialHeight;
+            
+            if (interactionData.direction.includes('r')) {
+                newWidth = Math.max(30, Math.min(150, interactionData.initialWidth + deltaX));
+                newHeight = newWidth / aspectRatio;
+            } else {
+                newWidth = Math.max(30, Math.min(150, interactionData.initialWidth - deltaX));
+                newHeight = newWidth / aspectRatio;
+            }
+            
+            // Apply new size
+            currentElement.style.width = `${newWidth}px`;
+            currentElement.style.height = `${newHeight}px`;
+            
+            // Adjust position for top/left resizing
+            if (interactionData.direction.includes('t')) {
+                const deltaHeight = newHeight - interactionData.initialHeight;
+                const currentTop = parseFloat(currentElement.style.top);
+                currentElement.style.top = `${currentTop - deltaHeight}px`;
+            }
+            
+            if (interactionData.direction.includes('l')) {
+                const deltaWidth = newWidth - interactionData.initialWidth;
+                const currentLeft = parseFloat(currentElement.style.left);
+                currentElement.style.left = `${currentLeft - deltaWidth}px`;
+            }
+            
+            // Update in decorations array
+            const decoration = decorations.find(d => d.id === currentElement.dataset.id);
+            if (decoration) {
+                decoration.width = newWidth;
+                decoration.height = newHeight;
+                decoration.x = parseFloat(currentElement.style.left);
+                decoration.y = parseFloat(currentElement.style.top);
+            }
+        }
+
+        function handleRotateUpdate(clientX, clientY) {
+            // Calculate angle between center and mouse position
+            const dx = clientX - interactionData.centerX;
+            const dy = clientY - interactionData.centerY;
+            let angle = Math.atan2(dy, dx) * (180 / Math.PI);
+            
+            // Normalize to 0-360 and add initial offset
+            angle = (angle + 360) % 360;
+            const totalAngle = interactionData.initialAngle + (angle - interactionData.initialAngle);
+            
+            // Apply rotation
+            currentElement.style.transform = `rotate(${totalAngle}deg)`;
+            
+            // Update in decorations array
+            const decoration = decorations.find(d => d.id === currentElement.dataset.id);
+            if (decoration) {
+                decoration.rotation = totalAngle;
+            }
+        }
+
+        function handleInteractionEnd() {
+            if (interactionType) {
+                saveDecorationsToStorage();
+            }
+            
+            // Clean up
+            interactionType = null;
+            currentElement = null;
+            interactionData = {
+                offsetX: 0,
+                offsetY: 0,
+                initialWidth: 0,
+                initialHeight: 0,
+                initialMouseX: 0,
+                initialMouseY: 0,
+                initialAngle: 0,
+                centerX: 0,
+                centerY: 0,
+                direction: null
+            };
+            
+            if (rafId) {
+                cancelAnimationFrame(rafId);
+                rafId = null;
+            }
+        }
+
+        function handleBackgroundClick(e) {
+            if (!e.target.closest('.tree-decoration') && 
+                !e.target.closest('.decoration-item') &&
+                !e.target.closest('.menu-item') &&
+                !e.target.closest('.music-controls') &&
+                !e.target.closest('.btn')) {
+                
+                // Click on tree to add decoration if one is selected
+                if (selectedDecoration && e.target.closest('.tree-container')) {
+                    addDecorationToTree(e);
+                }
+                // Deselect all decorations if clicking elsewhere
+                else {
+                    deselectAllDecorations();
+                }
+            }
+        }
+
+        function handleBackgroundTouch(e) {
+            if (!e.target.closest('.tree-decoration') && 
+                !e.target.closest('.decoration-item') &&
+                !e.target.closest('.menu-item') &&
+                !e.target.closest('.music-controls') &&
+                !e.target.closest('.btn')) {
+                
+                e.preventDefault();
+                
+                // Touch on tree to add decoration if one is selected
+                if (selectedDecoration && e.target.closest('.tree-container')) {
+                    addDecorationToTree(e);
+                }
+                // Deselect all decorations if touching elsewhere
+                else {
+                    deselectAllDecorations();
+                }
+            }
+        }
+
+        function removeDecoration(element) {
+            const decorationId = element.dataset.id;
+            
+            // Remove from array
+            decorations = decorations.filter(d => d.id !== decorationId);
+            
+            // Remove from DOM
+            element.remove();
+            
+            // Save to storage
+            saveDecorationsToStorage();
+        }
+
+        function clearAllDecorations() {
+            if (confirm('Are you sure you want to remove all decorations?')) {
+                const decorationElements = document.querySelectorAll('.tree-decoration');
+                decorationElements.forEach(decoration => decoration.remove());
+                
+                // Clear array
+                decorations = [];
+                
+                // Clear localStorage
+                localStorage.removeItem('christmasTreeDecorations');
+                
+                alert('All decorations have been removed!');
+            }
+        }
+
+        function resetDecorations() {
+            if (confirm('Reset to default decoration positions?')) {
+                // Clear current decorations
+                const decorationElements = document.querySelectorAll('.tree-decoration');
+                decorationElements.forEach(el => el.remove());
+                
+                // Reset array
+                decorations = [];
+                
+                // Add some default decorations
+                const treeContainer = document.getElementById('treeContainer');
+                const treeRect = treeContainer.getBoundingClientRect();
+                
+                // Select ball decoration
+                selectDecorationType(decorationTypes.find(d => d.id === 'ball'));
+                createDecorationElement(treeRect.width / 2, 100);
+                
+                // Select light decoration
+                selectDecorationType(decorationTypes.find(d => d.id === 'light'));
+                createDecorationElement(treeRect.width / 2 - 80, 180);
+                
+                // Select ribbon decoration
+                selectDecorationType(decorationTypes.find(d => d.id === 'ribbon_red'));
+                createDecorationElement(treeRect.width / 2 + 80, 250);
+                
+                // Select cake decoration
+                selectDecorationType(decorationTypes.find(d => d.id === 'cake'));
+                createDecorationElement(treeRect.width / 2, 350);
+                
+                // Save to storage
+                saveDecorationsToStorage();
+                
+                alert('Default decorations have been added!');
+            }
+        }
+
+        function saveDecorationsToStorage() {
+            const decorationsData = decorations.map(dec => ({
+                id: dec.id,
+                type: dec.type,
+                x: dec.x,
+                y: dec.y,
+                width: dec.width,
+                height: dec.height,
+                rotation: dec.rotation || 0
+            }));
+            localStorage.setItem('christmasTreeDecorations', JSON.stringify(decorationsData));
+        }
+
+        function loadSavedDecorations() {
+            const saved = localStorage.getItem('christmasTreeDecorations');
+            if (saved) {
+                try {
+                    const savedDecorations = JSON.parse(saved);
+                    
+                    savedDecorations.forEach(savedDec => {
+                        const decorationType = decorationTypes.find(d => d.id === savedDec.type);
+                        if (decorationType) {
+                            selectedDecoration = decorationType;
+                            createSavedDecorationElement(savedDec);
+                        }
+                    });
+                } catch (e) {
+                    console.error('Error loading saved decorations:', e);
+                }
+            }
+        }
+
+        function createSavedDecorationElement(savedDec) {
+            const treeContainer = document.getElementById('treeContainer');
+            
+            // Create decoration element
+            const decorationElement = document.createElement('div');
+            decorationElement.className = 'tree-decoration';
+            decorationElement.dataset.id = savedDec.id;
+            decorationElement.dataset.type = savedDec.type;
+            decorationElement.style.backgroundImage = `url(${selectedDecoration.image})`;
+            decorationElement.style.left = `${savedDec.x}px`;
+            decorationElement.style.top = `${savedDec.y}px`;
+            decorationElement.style.width = `${savedDec.width}px`;
+            decorationElement.style.height = `${savedDec.height}px`;
+            decorationElement.style.transform = `rotate(${savedDec.rotation || 0}deg)`;
+            
+            // Create resize handles
+            const handles = ['tl', 'tr', 'br', 'bl'];
+            handles.forEach(position => {
+                const handle = document.createElement('div');
+                handle.className = `resize-handle ${position}`;
+                decorationElement.appendChild(handle);
+            });
+            
+            // Create rotation handle
+            const rotateHandle = document.createElement('div');
+            rotateHandle.className = 'rotate-handle';
+            rotateHandle.innerHTML = '↻';
+            decorationElement.appendChild(rotateHandle);
+            
+            // Create remove button
+            const removeBtn = document.createElement('div');
+            removeBtn.className = 'remove-btn';
+            removeBtn.innerHTML = '×';
+            removeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                removeDecoration(decorationElement);
+            });
+            decorationElement.appendChild(removeBtn);
+            
+            // Add event listeners
+            decorationElement.addEventListener('mousedown', startDecorationInteraction);
+            decorationElement.addEventListener('touchstart', startDecorationInteraction, { passive: false });
+            
+            // Add to tree container
+            treeContainer.appendChild(decorationElement);
+            
+            // Add to decorations array
+            decorations.push(savedDec);
+        }
+
+        function saveTree() {
+            saveDecorationsToStorage();
+            alert('Your tree decoration has been saved! It will be remembered when you return.');
+        }
+
+        // Music control functions
+        function toggleMusic() {
+            if (isMusicPlaying) {
+                bgMusic.pause();
+                musicIcon.src = 'assets/stickers/bg-off.png';
+                musicText.textContent = 'Play Music';
+                isMusicPlaying = false;
+            } else {
+                bgMusic.play().then(() => {
+                    musicIcon.src = 'assets/stickers/bg-on.png';
+                    musicText.textContent = 'Mute Music';
+                    isMusicPlaying = true;
+                }).catch(error => {
+                    console.log("Could not play music:", error);
+                    musicIcon.src = 'assets/stickers/bg-off.png';
+                    musicText.textContent = 'Click to Play';
+                    setTimeout(() => {
+                        musicText.textContent = 'Play Music';
+                    }, 1000);
+                });
+            }
+        }
+        
+        function updateMusicDisplay() {
+            if (bgMusic.paused || !isMusicPlaying) {
+                musicIcon.src = 'assets/stickers/bg-off.png';
+                musicText.textContent = 'Play Music';
+            } else {
+                musicIcon.src = 'assets/stickers/bg-on.png';
+                musicText.textContent = 'Mute Music';
+            }
+        }
+        
+        // Navigation functions
+        function goToHome() {
+            const musicWasPlaying = isMusicPlaying;
+            const musicTime = bgMusic.currentTime;
+            
+            setTimeout(() => {
+                window.location.href = `index.html?music=${musicWasPlaying ? 'on' : 'off'}&time=${musicTime}`;
+            }, 300);
+        }
+        
+        function goToLandingPage() {
+            const musicWasPlaying = isMusicPlaying;
+            const musicTime = bgMusic.currentTime;
+            
+            setTimeout(() => {
+                window.location.href = `landing.html?music=${musicWasPlaying ? 'on' : 'off'}&time=${musicTime}`;
+            }, 300);
+        }
+        
+        function continueToTree() {
+            saveDecorationsToStorage();
+        }
+        
+        function continueToSnowflake() {
+            const musicWasPlaying = isMusicPlaying;
+            const musicTime = bgMusic.currentTime;
+            
+            setTimeout(() => {
+                window.location.href = `game.html?music=${musicWasPlaying ? 'on' : 'off'}&time=${musicTime}`;
+            }, 300);
+        }
+
+        function continueToWish() {
+            const musicWasPlaying = isMusicPlaying;
+            const musicTime = bgMusic.currentTime;
+            
+            setTimeout(() => {
+                window.location.href = `wish.html?music=${musicWasPlaying ? 'on' : 'off'}&time=${musicTime}`;
+            }, 300);
+        }
+        
+        function createSnowEffect() {
+            const container = document.getElementById('snowContainer');
+            // Reduced number of snowflakes for better performance
+            for (let i = 0; i < 15; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snow-particle';
+                snowflake.style.width = Math.random() * 3 + 1 + 'px';
+                snowflake.style.height = snowflake.style.width;
+                snowflake.style.left = Math.random() * 100 + 'vw';
+                snowflake.style.opacity = Math.random() * 0.3 + 0.1;
+                snowflake.style.animationDuration = Math.random() * 8 + 5 + 's';
+                snowflake.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(snowflake);
+            }
+        }
+        
+        // Set up audio event listeners
+        bgMusic.addEventListener('play', () => {
+            isMusicPlaying = true;
+            updateMusicDisplay();
+        });
+        
+        bgMusic.addEventListener('pause', () => {
+            isMusicPlaying = false;
+            updateMusicDisplay();
+        });
+        
+        // Initialize
+        createSnowEffect();
+    </script>
+</body>
+</html>

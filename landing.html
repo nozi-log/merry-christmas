@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Activities - Christmas Fun 🎄</title>
+    <style>
+        @font-face {
+            font-family: 'Snell Roundhand';
+            src: url('snell-roundhand/SnellBT-Bold.otf') format('opentype');
+            font-weight: bold;
+        }
+
+        @font-face {
+            font-family: 'Pixel Operator';
+            src: url('PixelOperator.ttf') format('truetype');
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: url('assets/bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Snowfall animation */
+        .snowflakes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            background-color: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            filter: blur(0.5px);
+            animation-name: snowfall;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+        }
+
+        @keyframes snowfall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Title image styling */
+        .title-image {
+            width: 800px;
+            max-width: 90vw;
+            margin-bottom: 180px;
+            margin-top: -30px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .activities {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 80px;
+            max-width: 1400px;
+            padding: 0 20px;
+            margin-bottom: 60px;
+        }
+
+        .activity-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .activity-item:hover {
+            transform: translateY(-10px);
+        }
+
+        .activity-icon {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .activity-item:hover .activity-icon {
+            transform: scale(1.1);
+        }
+
+        .activity-icon img {
+            width: 180px;
+            height: 180px;
+            object-fit: contain;
+            filter: drop-shadow(0 5px 15px rgba(202, 202, 202, 0.5));
+        }
+
+        .start-btn {
+            background: #3c7f4c;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-family: 'Pixel Operator', monospace;
+            font-size: 1.3rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .start-btn:hover {
+            background: #d63232;
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Music controls */
+        .music-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            animation: gentlePulse 3s infinite;
+            padding: 8px;
+        }
+
+        @keyframes gentlePulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .music-controls:hover {
+            animation-play-state: paused;
+        }
+
+        .music-icon {
+            width: 50px;
+            height: 50px;
+            transition: transform 0.3s ease;
+        }
+
+        .music-controls:hover .music-icon {
+            transform: scale(1.2) rotate(15deg);
+        }
+
+        .music-text {
+            font-family: 'Pixel Operator', monospace;
+            font-size: 1rem;
+            color: #8B4513;
+            margin-top: 4px;
+            text-align: center;
+        }
+
+        /* Home button */
+        .home-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            animation: gentlePulse 3s infinite;
+            padding: 8px;
+            text-decoration: none;
+        }
+
+        .home-icon {
+            width: 50px;
+            height: 50px;
+            transition: transform 0.3s ease;
+        }
+
+        .home-button:hover .home-icon {
+            transform: scale(1.2) rotate(-5deg);
+        }
+
+        .home-text {
+            font-family: 'Pixel Operator', monospace;
+            font-size: 1rem;
+            color: #8B4513;
+            margin-top: 4px;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .activities {
+                gap: 60px;
+            }
+            
+            .title-image {
+                width: 700px;
+                margin-bottom: 200px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .activities {
+                gap: 50px;
+            }
+            
+            .title-image {
+                width: 600px;
+                margin-bottom: 150px;
+            }
+            
+            .activity-icon {
+                width: 130px;
+                height: 130px;
+            }
+            
+            .activity-icon img {
+                width: 130px;
+                height: 130px;
+            }
+            
+            .start-btn {
+                font-size: 1.2rem;
+                max-width: 280px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .title-image {
+                width: 500px;
+                margin-bottom: 100px;
+            }
+            
+            .activities {
+                flex-direction: column;
+                align-items: center;
+                gap: 60px;
+            }
+            
+            .activity-icon {
+                width: 120px;
+                height: 120px;
+                margin-bottom: 30px;
+            }
+            
+            .activity-icon img {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .start-btn {
+                padding: 14px 35px;
+                font-size: 1.2rem;
+                max-width: 260px;
+            }
+            
+            .music-controls, .home-button {
+                top: 15px;
+                padding: 6px;
+            }
+            
+            .music-controls {
+                right: 15px;
+            }
+            
+            .home-button {
+                left: 15px;
+            }
+            
+            .music-icon, .home-icon {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .music-text, .home-text {
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .title-image {
+                width: 90vw;
+                margin-bottom: 80px;
+            }
+            
+            .activities {
+                gap: 50px;
+            }
+            
+            .activity-icon {
+                width: 100px;
+                height: 100px;
+                margin-bottom: 25px;
+            }
+            
+            .activity-icon img {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .start-btn {
+                padding: 12px 30px;
+                font-size: 1.1rem;
+                max-width: 240px;
+            }
+            
+            .music-controls, .home-button {
+                top: 10px;
+                padding: 5px;
+            }
+            
+            .music-controls {
+                right: 10px;
+            }
+            
+            .home-button {
+                left: 10px;
+            }
+            
+            .music-icon, .home-icon {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .music-text, .home-text {
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Snowfall effect -->
+    <div class="snowflakes" id="snowflakes"></div>
+
+    <!-- Home Button -->
+    <a href="index.html" class="home-button">
+        <img src="assets/stickers/home.png" alt="Home" class="home-icon">
+        <div class="home-text">Home</div>
+    </a>
+
+    <!-- Music Controls -->
+    <div class="music-controls" onclick="toggleMusic()">
+        <img src="assets/stickers/bg-off.png" alt="Music Control" class="music-icon" id="musicIcon">
+        <div class="music-text" id="musicText">Play Music</div>
+    </div>
+
+    <!-- Background Music -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="assets/audio/background.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <div class="content">
+        <!-- Title image -->
+        <img src="assets/title2.png" alt="Choose Activities" class="title-image">
+        
+        <div class="activities">
+            <div class="activity-item" onclick="startActivity('game')">
+                <div class="activity-icon">
+                    <img src="assets/stickers/snowing.png" alt="Snowflake">
+                </div>
+                <button class="start-btn">Catch Snowflakes</button>
+            </div>
+            
+            <div class="activity-item" onclick="startActivity('tree')">
+                <div class="activity-icon">
+                    <img src="assets/stickers/tree2.png" alt="Christmas Tree">
+                </div>
+                <button class="start-btn">Decorate Your Tree</button>
+            </div>
+            
+            <div class="activity-item" onclick="startActivity('wish')">
+                <div class="activity-icon">
+                    <img src="assets/stickers/cake.png" alt="Cake">
+                </div>
+                <button class="start-btn">Make a Wish</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize audio
+        const bgMusic = document.getElementById('bgMusic');
+        const musicIcon = document.getElementById('musicIcon');
+        const musicText = document.getElementById('musicText');
+        
+        // Set initial volume
+        bgMusic.volume = 0.5;
+        
+        // Track if music is playing
+        let isMusicPlaying = false;
+        let musicStartTime = 0;
+        
+        // Check localStorage for music state from index page
+        function checkMusicStateFromStorage() {
+            const musicState = localStorage.getItem('christmasMusicPlaying');
+            return musicState === 'true';
+        }
+        
+        // Get music playback time from index page
+        function getMusicPlaybackTime() {
+            const musicTime = localStorage.getItem('christmasMusicTime');
+            return musicTime ? parseInt(musicTime) : 0;
+        }
+        
+        // Save current music playback time to localStorage
+        function saveMusicPlaybackTime() {
+            if (!bgMusic.paused && isMusicPlaying) {
+                localStorage.setItem('christmasMusicTime', Math.floor(bgMusic.currentTime).toString());
+            }
+        }
+        
+        // Create snowfall effect
+        function createSnowflakes() {
+            const snowflakesContainer = document.getElementById('snowflakes');
+            const snowflakeCount = 80;
+            
+            for (let i = 0; i < snowflakeCount; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.classList.add('snowflake');
+                
+                // Random size between 2px and 6px
+                const size = Math.random() * 4 + 2;
+                snowflake.style.width = `${size}px`;
+                snowflake.style.height = `${size}px`;
+                
+                // Random position
+                snowflake.style.left = `${Math.random() * 100}vw`;
+                
+                // Random animation duration (5-15 seconds)
+                const duration = Math.random() * 10 + 5;
+                snowflake.style.animationDuration = `${duration}s`;
+                
+                // Random delay
+                snowflake.style.animationDelay = `${Math.random() * 5}s`;
+                
+                snowflakesContainer.appendChild(snowflake);
+            }
+        }
+        
+        // Function to toggle music
+        function toggleMusic() {
+            if (isMusicPlaying) {
+                // Pause the music
+                bgMusic.pause();
+                musicIcon.src = 'assets/stickers/bg-off.png';
+                musicText.textContent = 'Play Music';
+                isMusicPlaying = false;
+                // Save state and time to localStorage
+                localStorage.setItem('christmasMusicPlaying', 'false');
+                saveMusicPlaybackTime();
+            } else {
+                // Play the music
+                bgMusic.play().then(() => {
+                    musicIcon.src = 'assets/stickers/bg-on.png';
+                    musicText.textContent = 'Mute Music';
+                    isMusicPlaying = true;
+                    // Save state to localStorage
+                    localStorage.setItem('christmasMusicPlaying', 'true');
+                }).catch(error => {
+                    console.log("Could not play music:", error);
+                    // If play fails, show error temporarily
+                    musicIcon.src = 'assets/stickers/bg-off.png';
+                    musicText.textContent = 'Click to Play';
+                    setTimeout(() => {
+                        musicText.textContent = 'Play Music';
+                    }, 1000);
+                });
+            }
+        }
+        
+        // Update icon based on current state
+        function updateMusicDisplay() {
+            if (bgMusic.paused || !isMusicPlaying) {
+                musicIcon.src = 'assets/stickers/bg-off.png';
+                musicText.textContent = 'Play Music';
+            } else {
+                musicIcon.src = 'assets/stickers/bg-on.png';
+                musicText.textContent = 'Mute Music';
+            }
+        }
+        
+        // Set up audio event listeners
+        bgMusic.addEventListener('play', () => {
+            isMusicPlaying = true;
+            updateMusicDisplay();
+            // Save state to localStorage
+            localStorage.setItem('christmasMusicPlaying', 'true');
+        });
+        
+        bgMusic.addEventListener('pause', () => {
+            isMusicPlaying = false;
+            updateMusicDisplay();
+            // Save state and time to localStorage
+            localStorage.setItem('christmasMusicPlaying', 'false');
+            saveMusicPlaybackTime();
+        });
+        
+        bgMusic.addEventListener('timeupdate', () => {
+            if (isMusicPlaying) {
+                // Save playback time periodically
+                saveMusicPlaybackTime();
+            }
+        });
+        
+        bgMusic.addEventListener('ended', () => {
+            isMusicPlaying = false;
+            updateMusicDisplay();
+            localStorage.setItem('christmasMusicPlaying', 'false');
+            localStorage.setItem('christmasMusicTime', '0');
+        });
+        
+        // Auto-play music if it was playing on index page with correct timing
+        function autoPlayMusicIfEnabled() {
+            const shouldPlayMusic = checkMusicStateFromStorage();
+            const savedTime = getMusicPlaybackTime();
+            
+            if (shouldPlayMusic) {
+                // Set the current time to where it left off
+                if (savedTime > 0) {
+                    bgMusic.currentTime = savedTime;
+                }
+                
+                // Small delay to ensure page is fully loaded
+                setTimeout(() => {
+                    bgMusic.play().then(() => {
+                        isMusicPlaying = true;
+                        updateMusicDisplay();
+                        // Start saving playback time
+                        setInterval(saveMusicPlaybackTime, 1000);
+                    }).catch(error => {
+                        console.log("Auto-play prevented or failed:", error);
+                        // If auto-play fails, don't show error, just keep it paused
+                    });
+                }, 500);
+            }
+        }
+        
+        // Activity functions
+        function startActivity(type) {
+            // Play click sound (if audio file exists)
+            try {
+                const clickSound = new Audio('assets/audio/click.mp3');
+                clickSound.play().catch(e => console.log("Click audio not found or blocked"));
+            } catch (error) {
+                console.log("Error playing click sound:", error);
+            }
+            
+            // Save current music state and time before redirecting
+            localStorage.setItem('christmasMusicPlaying', isMusicPlaying.toString());
+            saveMusicPlaybackTime();
+            
+            // Redirect based on activity
+            setTimeout(() => {
+                switch(type) {
+                    case 'game':
+                        window.location.href = 'game.html';
+                        break;
+                    case 'tree':
+                        window.location.href = 'tree.html';
+                        break;
+                    case 'wish':
+                        window.location.href = 'wish.html';
+                        break;
+                    default:
+                        console.log("Unknown activity type:", type);
+                }
+            }, 300);
+        }
+        
+        // Save music state when leaving the page
+        window.addEventListener('beforeunload', () => {
+            localStorage.setItem('christmasMusicPlaying', isMusicPlaying.toString());
+            saveMusicPlaybackTime();
+        });
+        
+        // Initialize everything when page loads
+        window.addEventListener('load', () => {
+            // Create snow animation
+            createSnowflakes();
+            
+            // Update music display
+            updateMusicDisplay();
+            
+            // Auto-play music if it was playing on index page
+            autoPlayMusicIfEnabled();
+        });
+        
+        // Also initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', updateMusicDisplay);
+    </script>
+</body>
+</html>

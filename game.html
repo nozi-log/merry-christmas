@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catch Snowflakes - Christmas Game ❄️</title>
+    <style>
+        @font-face {
+            font-family: 'Snell Roundhand';
+            src: url('snell-roundhand/SnellBT-Bold.otf') format('opentype');
+            font-weight: bold;
+        }
+
+        @font-face {
+            font-family: 'Pixel Operator';
+            src: url('PixelOperator.ttf') format('truetype');
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: url('assets/bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #333;
+            text-align: center;
+            font-family: 'Snell Roundhand', cursive;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden; /* Prevent body scroll */
+        }
+
+        /* Snowfall animation */
+        .snow-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .snow-particle {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: snowfall linear infinite;
+            will-change: transform;
+        }
+
+        @keyframes snowfall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .game-container {
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Title Image Styling */
+        .title-image {
+            width: 700px;
+            max-width: 90vw;
+            margin-bottom: 15px;
+            margin-top: 10px;
+            animation: float 6s ease-in-out infinite;
+            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .game-subtitle {
+            font-family: 'Pixel Operator', monospace;
+            font-size: 1.6rem;
+            color: #8B4513;
+            text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.5);
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        /* Main content container */
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 30px;
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 20px;
+        }
+
+        .game-area-container {
+            flex: 1;
+            min-width: 300px;
+            max-width: 800px;
+            position: relative;
+        }
+
+        .game-area {
+            width: 100%;
+            height: 60vh;
+            max-height: 500px;
+            border: 4px solid #8B4513;
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden !important;
+            background: #872020;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            contain: layout paint;
+        }
+
+        /* Game controls positioned in center of game area */
+        .game-controls-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 10;
+        }
+
+        .stats-sidebar {
+            width: 250px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            border: 3px solid #8B4513;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        /* Play Again button container */
+        .play-again-container {
+            position: absolute;
+            bottom: -70px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+            z-index: 20;
+        }
+
+        .play-again-container.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .play-again-btn {
+            background: linear-gradient(to bottom, #2E8B57, #3CB371);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Pixel Operator', monospace;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 2px solid #1e6b42;
+            min-width: 180px;
+        }
+
+        .play-again-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(46, 139, 87, 0.4);
+            background: linear-gradient(to bottom, #3CB371, #2E8B57);
+        }
+
+        .stat-box {
+            text-align: center;
+            font-family: 'Pixel Operator', monospace;
+            color: #333;
+        }
+
+        .stat-title {
+            font-size: 1.3rem;
+            color: #8B4513;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            color: #2E8B57;
+            font-weight: bold;
+            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .snowflake, .nozi {
+            position: absolute;
+            cursor: pointer;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            image-rendering: pixelated;
+            transition: transform 0.2s ease;
+            will-change: transform, top, left;
+            z-index: 5;
+            transform: translate3d(0, 0, 0);
+            backface-visibility: hidden;
+        }
+
+        .snowflake:hover, .nozi:hover {
+            transform: scale(1.1) translate3d(0, 0, 0);
+        }
+
+        .btn {
+            background: linear-gradient(to bottom, #8B4513, #A0522D);
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Pixel Operator', monospace;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 2px solid #654321;
+            min-width: 200px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(139, 69, 19, 0.4);
+            background: linear-gradient(to bottom, #A0522D, #8B4513);
+        }
+
+        /* Warning message for nozi click */
+        .warning-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ff4d4d;
+            font-size: 1.8rem;
+            font-weight: bold;
+            z-index: 1000;
+            font-family: 'Pixel Operator', monospace;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border-radius: 10px;
+            display: none;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        /* Music controls with animation */
+        .music-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            animation: gentlePulse 3s infinite;
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        @keyframes gentlePulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .music-controls:hover {
+            animation-play-state: paused;
+        }
+
+        .music-icon {
+            width: 50px;
+            height: 50px;
+            transition: transform 0.3s ease;
+        }
+
+        .music-controls:hover .music-icon {
+            transform: scale(1.2) rotate(15deg);
+        }
+
+        .music-text {
+            font-family: 'Pixel Operator', monospace;
+            font-size: 1rem;
+            color: black;
+            margin-top: 4px;
+            text-align: center;
+        }
+        
+        /* Menu Bar */
+        .menu-bar {
+            position: fixed;
+            top: 15px;
+            left: 4%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            z-index: 100;
+        }
+
+        .menu-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-3px);
+        }
+
+        .menu-icon {
+            width: 50px;
+            height: 50px;
+            transition: transform 0.3s ease;
+        }
+
+        .menu-item:hover .menu-icon {
+            transform: scale(1.1);
+        }
+
+        .menu-text {
+            font-family: 'Pixel Operator', monospace;
+            font-size: 1rem;
+            color: #8B4513;
+            margin-top: 2px;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .main-content {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+            
+            .stats-sidebar {
+                width: 90%;
+                max-width: 400px;
+                flex-direction: row;
+                justify-content: space-around;
+                padding: 15px;
+                margin-bottom: 40px;
+            }
+            
+            .stat-box {
+                flex: 1;
+            }
+            
+            .game-area {
+                height: 50vh;
+                max-height: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .title-image {
+                width: 500px;
+                margin-bottom: 10px;
+            }
+            
+            .btn, .play-again-btn {
+                width: 250px;
+            }
+            
+            .menu-bar {
+                top: 10px;
+                padding: 8px 15px;
+                gap: 10px;
+            }
+            
+            .music-controls {
+                top: 15px;
+                right: 15px;
+            }
+            
+            .music-icon {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .stats-sidebar {
+                flex-direction: column;
+                gap: 15px;
+                margin-bottom: 50px;
+            }
+            
+            .play-again-container {
+                bottom: -60px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .title-image {
+                width: 90vw;
+            }
+            
+            .menu-bar {
+                top: 10px;
+                padding: 6px 12px;
+                gap: 8px;
+            }
+            
+            .menu-icon {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .menu-text {
+                font-size: 0.6rem;
+            }
+            
+            .music-controls {
+                top: 10px;
+                right: 10px;
+                padding: 8px;
+            }
+            
+            .game-area {
+                height: 45vh;
+                max-height: 350px;
+            }
+            
+            .stat-value {
+                font-size: 2rem;
+            }
+            
+            .stat-title {
+                font-size: 1.1rem;
+            }
+            
+            .play-again-container {
+                bottom: -50px;
+            }
+            
+            .play-again-btn {
+                padding: 10px 25px;
+                font-size: 1rem;
+                min-width: 160px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background snow -->
+    <div class="snow-container" id="snowContainer"></div>
+
+    <!-- Warning message for nozi -->
+    <div class="warning-message" id="warningMessage">don't catch nozi~</div>
+
+    <!-- Music controls -->
+    <div class="music-controls" onclick="toggleMusic()">
+        <img src="assets/stickers/bg-off.png" alt="Music Control" class="music-icon" id="musicIcon">
+        <div class="music-text" id="musicText">Play Music</div>
+    </div>
+
+    <!-- Menu Bar -->
+    <div class="menu-bar">
+        <div class="menu-item" onclick="goToHome()">
+            <img src="assets/stickers/home.png" alt="Home" class="menu-icon">
+            <div class="menu-text">Home</div>
+        </div>
+        <div class="menu-item" onclick="goToLandingPage()">
+            <img src="assets/stickers/snowman.png" alt="Activities" class="menu-icon">
+            <div class="menu-text">Activities</div>
+        </div>
+        <div class="menu-item" onclick="continueToTree()">
+            <img src="assets/stickers/tree.png" alt="Tree" class="menu-icon">
+            <div class="menu-text">Tree</div>
+        </div>
+        <div class="menu-item" onclick="continueToWish()">
+            <img src="assets/stickers/cake.png" alt="Wish" class="menu-icon">
+            <div class="menu-text">Wish</div>
+        </div>
+    </div>
+    
+    <div class="game-container">
+        <!-- Title Image -->
+        <img src="assets/title3.png" alt="Gatch snowflakes" class="title-image">
+        <p class="game-subtitle">Click snowflakes~</p>
+        
+        <div class="main-content">
+            <div class="game-area-container">
+                <div class="game-area" id="gameArea">
+                    <!-- Snowflakes and Nozi will appear here -->
+                    <!-- Game controls in center -->
+                    <div class="game-controls-center" id="centerControls">
+                        <button id="startBtn" class="btn">Start Game</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stats-sidebar">
+                <div class="stat-box">
+                    <div class="stat-title">Score</div>
+                    <div id="score" class="stat-value">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-title">Timer</div>
+                    <div id="timer" class="stat-value">25s</div>
+                </div>
+                <!-- Play Again Button Container -->
+                <div class="play-again-container" id="playAgainContainer">
+                    <button id="playAgainBtn" class="play-again-btn" style="display: none;">Play Again</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="bgMusic" loop preload="auto">
+        <source src="assets/audio/background.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        // Game variables
+        let score = 0;
+        let timeLeft = 25;
+        let gameActive = false;
+        let gameInterval;
+        let spawnInterval;
+        let fallingObjects = [];
+        let animationFrameId = null;
+        
+        // DOM elements
+        const gameArea = document.getElementById('gameArea');
+        const startBtn = document.getElementById('startBtn');
+        const playAgainBtn = document.getElementById('playAgainBtn');
+        const playAgainContainer = document.getElementById('playAgainContainer');
+        const centerControls = document.getElementById('centerControls');
+        const scoreElement = document.getElementById('score');
+        const timerElement = document.getElementById('timer');
+        const warningMessage = document.getElementById('warningMessage');
+        
+        // Music control variables
+        const bgMusic = document.getElementById('bgMusic');
+        const musicIcon = document.getElementById('musicIcon');
+        const musicText = document.getElementById('musicText');
+        let isMusicPlaying = false;
+        
+        // Image paths
+        const SNOWFLAKE_IMAGE = 'assets/stickers/snow.png';
+        const NOZI_IMAGE = 'assets/stickers/nozi.png';
+
+        // Initialize when page loads
+        window.addEventListener('load', () => {
+            // Check URL parameters for music state
+            const urlParams = new URLSearchParams(window.location.search);
+            const musicParam = urlParams.get('music');
+            const timeParam = urlParams.get('time');
+            
+            if (musicParam === 'on' && timeParam) {
+                bgMusic.currentTime = parseFloat(timeParam);
+                setTimeout(() => {
+                    bgMusic.play().then(() => {
+                        isMusicPlaying = true;
+                        updateMusicDisplay();
+                    }).catch(e => console.log("Auto-play prevented"));
+                }, 500);
+            }
+            
+            updateMusicDisplay();
+            createSnowEffect();
+            
+            // Add play again button event listener
+            playAgainBtn.addEventListener('click', () => {
+                startGame();
+            });
+            
+            // Add start button event listener
+            startBtn.addEventListener('click', () => {
+                startGame();
+            });
+        });
+
+        function startGame() {
+            // Reset game state
+            score = 0;
+            timeLeft = 25;
+            gameActive = true;
+            
+            // Clear previous intervals and animation frames
+            clearAllIntervals();
+            
+            // Clear game area
+            gameArea.innerHTML = '';
+            fallingObjects = [];
+            
+            // Hide center controls and play again button
+            centerControls.style.display = 'none'; // This hides the start button
+            playAgainBtn.style.display = 'none';
+            playAgainContainer.classList.remove('show');
+            
+            // Reset stats display
+            scoreElement.textContent = score;
+            timerElement.textContent = `${timeLeft}s`;
+            
+            // Start game timer
+            gameInterval = setInterval(() => {
+                if (!gameActive) return;
+                
+                timeLeft--;
+                timerElement.textContent = `${timeLeft}s`;
+                
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+            
+            // Start spawning objects - optimized for performance
+            spawnInterval = setInterval(() => {
+                if (!gameActive) return;
+                
+                // Spawn 1-3 objects at once (reduced for better performance)
+                const objectsToSpawn = Math.floor(Math.random() * 3) + 1;
+                
+                for (let i = 0; i < objectsToSpawn; i++) {
+                    // 80% chance for snowflake, 20% for nozi
+                    if (Math.random() < 0.8) {
+                        createSnowflake();
+                    } else {
+                        createNozi();
+                    }
+                }
+            }, 500); // Slightly reduced frequency
+            
+            // Start optimized animation loop
+            startAnimationLoop();
+        }
+        
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            
+            // Random size
+            const size = Math.random() * 40 + 30;
+            snowflake.style.width = `${size}px`;
+            snowflake.style.height = `${size}px`;
+            
+            // Get game area dimensions
+            const gameAreaWidth = gameArea.offsetWidth;
+            const gameAreaHeight = gameArea.offsetHeight;
+            
+            if (gameAreaWidth === 0 || gameAreaHeight === 0) return;
+            
+            // Ensure snowflake stays within bounds
+            const maxX = gameAreaWidth - size;
+            const startX = Math.max(5, Math.min(maxX - 5, Math.random() * maxX));
+            
+            snowflake.style.left = `${startX}px`;
+            snowflake.style.top = `-${size}px`;
+            
+            // Set background image
+            snowflake.style.backgroundImage = `url(${SNOWFLAKE_IMAGE})`;
+            
+            // Random falling speed
+            const speed = Math.random() * 1.5 + 1;
+            
+            // Add click event
+            snowflake.addEventListener('click', () => {
+                if (!gameActive || !snowflake.parentNode) return;
+                
+                // Remove snowflake with animation
+                snowflake.style.opacity = '0';
+                snowflake.style.transform = 'scale(0)';
+                
+                // Increase score
+                score += 1;
+                scoreElement.textContent = score;
+                
+                // Create particles
+                createParticles(snowflake, '#fff');
+                
+                // Remove from falling objects array
+                const index = fallingObjects.findIndex(obj => obj.element === snowflake);
+                if (index > -1) {
+                    fallingObjects.splice(index, 1);
+                }
+                
+                // Remove element after animation
+                setTimeout(() => {
+                    if (snowflake.parentNode) {
+                        snowflake.remove();
+                    }
+                }, 300);
+            });
+            
+            // Add to game area
+            gameArea.appendChild(snowflake);
+            
+            // Add to falling objects array
+            fallingObjects.push({
+                element: snowflake,
+                x: startX,
+                y: -size,
+                speed: speed,
+                type: 'snowflake',
+                startX: startX,
+                swayOffset: Math.random() * Math.PI * 2,
+                width: size
+            });
+        }
+        
+        function createNozi() {
+            const nozi = document.createElement('div');
+            nozi.classList.add('nozi');
+            
+            // Random size
+            const size = Math.random() * 35 + 30;
+            nozi.style.width = `${size}px`;
+            nozi.style.height = `${size}px`;
+            
+            // Get game area dimensions
+            const gameAreaWidth = gameArea.offsetWidth;
+            const gameAreaHeight = gameArea.offsetHeight;
+            
+            if (gameAreaWidth === 0 || gameAreaHeight === 0) return;
+            
+            // Ensure nozi stays within bounds
+            const maxX = gameAreaWidth - size;
+            const startX = Math.max(5, Math.min(maxX - 5, Math.random() * maxX));
+            
+            nozi.style.left = `${startX}px`;
+            nozi.style.top = `-${size}px`;
+            
+            // Set background image
+            nozi.style.backgroundImage = `url(${NOZI_IMAGE})`;
+            
+            // Random falling speed
+            const speed = Math.random() * 1.2 + 0.8;
+            
+            // Add click event
+            nozi.addEventListener('click', () => {
+                if (!gameActive || !nozi.parentNode) return;
+                
+                // Show warning message
+                showNoziWarning();
+                
+                // Remove nozi with animation
+                nozi.style.opacity = '0';
+                nozi.style.transform = 'scale(0) rotate(720deg)';
+                
+                // Decrease score (but not below 0)
+                score = Math.max(0, score - 1);
+                scoreElement.textContent = score;
+                
+                // Create particles
+                createParticles(nozi, '#ff0000');
+                
+                // Remove from falling objects array
+                const index = fallingObjects.findIndex(obj => obj.element === nozi);
+                if (index > -1) {
+                    fallingObjects.splice(index, 1);
+                }
+                
+                // Remove element after animation
+                setTimeout(() => {
+                    if (nozi.parentNode) {
+                        nozi.remove();
+                    }
+                }, 300);
+            });
+            
+            // Add to game area
+            gameArea.appendChild(nozi);
+            
+            // Add to falling objects array
+            fallingObjects.push({
+                element: nozi,
+                x: startX,
+                y: -size,
+                speed: speed,
+                type: 'nozi',
+                width: size
+            });
+        }
+        
+        function showNoziWarning() {
+            // Show the warning message
+            warningMessage.style.display = 'block';
+            warningMessage.style.opacity = '1';
+            
+            // Hide after 2 seconds
+            setTimeout(() => {
+                warningMessage.style.opacity = '0';
+                setTimeout(() => {
+                    warningMessage.style.display = 'none';
+                }, 500);
+            }, 2000);
+        }
+        
+        function startAnimationLoop() {
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+            }
+            
+            function updateGame() {
+                if (!gameActive || !gameArea) {
+                    animationFrameId = null;
+                    return;
+                }
+                
+                const gameAreaHeight = gameArea.offsetHeight;
+                const gameAreaWidth = gameArea.offsetWidth;
+                
+                // Update all falling objects
+                for (let i = fallingObjects.length - 1; i >= 0; i--) {
+                    const obj = fallingObjects[i];
+                    
+                    if (!obj.element || !obj.element.parentNode) {
+                        fallingObjects.splice(i, 1);
+                        continue;
+                    }
+                    
+                    obj.y += obj.speed;
+                    
+                    // Check if object is still within game area
+                    if (obj.y > gameAreaHeight) {
+                        // Remove object if it falls below game area
+                        if (obj.element.parentNode) {
+                            obj.element.remove();
+                        }
+                        fallingObjects.splice(i, 1);
+                        continue;
+                    }
+                    
+                    // Update position
+                    obj.element.style.top = `${obj.y}px`;
+                    
+                    // Add gentle sway for snowflakes with bounds checking
+                    if (obj.type === 'snowflake') {
+                        const currentTime = Date.now() / 1000;
+                        const sway = Math.sin(currentTime + obj.swayOffset) * 2;
+                        let newX = obj.startX + sway;
+                        
+                        // Keep within game area bounds
+                        newX = Math.max(5, Math.min(newX, gameAreaWidth - obj.width - 5));
+                        
+                        obj.element.style.left = `${newX}px`;
+                        obj.x = newX;
+                    }
+                    
+                    // Add rotation for nozi
+                    if (obj.type === 'nozi') {
+                        obj.element.style.transform = `rotate(${obj.y / 2}deg)`;
+                    }
+                }
+                
+                // Continue animation loop only if game is active
+                if (gameActive) {
+                    animationFrameId = requestAnimationFrame(updateGame);
+                }
+            }
+            
+            animationFrameId = requestAnimationFrame(updateGame);
+        }
+        
+        function createParticles(element, color) {
+            // Get position relative to game area
+            const rect = element.getBoundingClientRect();
+            const gameRect = gameArea.getBoundingClientRect();
+            
+            // Calculate position within game area
+            const x = rect.left - gameRect.left + rect.width / 2;
+            const y = rect.top - gameRect.top + rect.height / 2;
+            
+            // Create particle container inside game area
+            for (let i = 0; i < 5; i++) { // Reduced particle count
+                const particle = document.createElement('div');
+                particle.style.position = 'absolute';
+                particle.style.width = '6px';
+                particle.style.height = '6px';
+                particle.style.backgroundColor = color;
+                particle.style.borderRadius = '50%';
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.pointerEvents = 'none';
+                particle.style.zIndex = '10';
+                particle.style.boxShadow = `0 0 8px ${color}`;
+                
+                gameArea.appendChild(particle);
+                
+                // Animate particle
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 2 + 1;
+                let posX = x;
+                let posY = y;
+                let opacity = 1;
+                
+                const animate = () => {
+                    posX += Math.cos(angle) * speed;
+                    posY += Math.sin(angle) * speed;
+                    opacity -= 0.05;
+                    
+                    particle.style.left = posX + 'px';
+                    particle.style.top = posY + 'px';
+                    particle.style.opacity = opacity;
+                    
+                    // Remove particle if outside game area or faded out
+                    if (opacity > 0 && 
+                        posX > 0 && posX < gameArea.offsetWidth && 
+                        posY > 0 && posY < gameArea.offsetHeight) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        if (particle.parentNode) {
+                            particle.remove();
+                        }
+                    }
+                };
+                
+                requestAnimationFrame(animate);
+            }
+        }
+        
+        function endGame() {
+            gameActive = false;
+            clearAllIntervals();
+            
+            // Clear all falling objects
+            fallingObjects.forEach(obj => {
+                if (obj.element && obj.element.parentNode) {
+                    obj.element.remove();
+                }
+            });
+            fallingObjects = [];
+            
+            // Show play again button
+            playAgainBtn.style.display = 'inline-block';
+            playAgainContainer.classList.add('show');
+            
+            // Show start button again (it will be hidden when game restarts)
+            centerControls.style.display = 'flex';
+            
+            // Show game over message
+            scoreElement.textContent = `${score} - Game Over!`;
+            timerElement.textContent = '0s';
+            
+            // Reset after 2 seconds
+            setTimeout(() => {
+                scoreElement.textContent = score;
+                timerElement.textContent = '25s';
+            }, 2000);
+        }
+        
+        function clearAllIntervals() {
+            if (gameInterval) clearInterval(gameInterval);
+            if (spawnInterval) clearInterval(spawnInterval);
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
+            }
+        }
+        
+        // Music control functions
+        function toggleMusic() {
+            if (isMusicPlaying) {
+                bgMusic.pause();
+                musicIcon.src = 'assets/stickers/bg-off.png';
+                musicText.textContent = 'Play Music';
+                isMusicPlaying = false;
+            } else {
+                bgMusic.play().then(() => {
+                    musicIcon.src = 'assets/stickers/bg-on.png';
+                    musicText.textContent = 'Mute Music';
+                    isMusicPlaying = true;
+                }).catch(error => {
+                    console.log("Could not play music:", error);
+                    musicIcon.src = 'assets/stickers/bg-off.png';
+                    musicText.textContent = 'Click to Play';
+                    setTimeout(() => {
+                        musicText.textContent = 'Play Music';
+                    }, 1000);
+                });
+            }
+        }
+        
+        function updateMusicDisplay() {
+            if (bgMusic.paused || !isMusicPlaying) {
+                musicIcon.src = 'assets/stickers/bg-off.png';
+                musicText.textContent = 'Play Music';
+            } else {
+                musicIcon.src = 'assets/stickers/bg-on.png';
+                musicText.textContent = 'Mute Music';
+            }
+        }
+        
+        // Navigation functions - REMOVED ALL .mp3 REFERENCES
+        function goToHome() {
+            const musicWasPlaying = isMusicPlaying;
+            const musicTime = bgMusic.currentTime;
+            
+            setTimeout(() => {
+                window.location.href = `index.html?music=${musicWasPlaying ? 'on' : 'off'}&time=${musicTime}`;
+            }, 300);
+        }
+        
+        function goToLandingPage() {
+            const musicWasPlaying = isMusicPlaying;
+            const musicTime = bgMusic.currentTime;
+            
+            setTimeout(() => {
+                window.location.href = `landing.html?music=${musicWasPlaying ? 'on' : 'off'}&time=${musicTime}`;
+            }, 300);
+        }
+        
+        function continueToTree() {
+            const musicWasPlaying = isMusicPlaying;
+            const musicTime = bgMusic.currentTime;
+            
+            setTimeout(() => {
+                window.location.href = `tree.html?music=${musicWasPlaying ? 'on' : 'off'}&time=${musicTime}`;
+            }, 300);
+        }
+        
+        function continueToWish() {
+            const musicWasPlaying = isMusicPlaying;
+            const musicTime = bgMusic.currentTime;
+            
+            setTimeout(() => {
+                window.location.href = `wish.html?music=${musicWasPlaying ? 'on' : 'off'}&time=${musicTime}`;
+            }, 300);
+        }
+        
+        function createSnowEffect() {
+            const container = document.getElementById('snowContainer');
+            // Reduced snow particle count for better performance
+            for (let i = 0; i < 25; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snow-particle';
+                snowflake.style.width = Math.random() * 4 + 2 + 'px';
+                snowflake.style.height = snowflake.style.width;
+                snowflake.style.left = Math.random() * 100 + 'vw';
+                snowflake.style.opacity = Math.random() * 0.4 + 0.2;
+                snowflake.style.animationDuration = Math.random() * 6 + 4 + 's';
+                snowflake.style.animationDelay = Math.random() * 3 + 's';
+                container.appendChild(snowflake);
+            }
+        }
+        
+        // Set up audio event listeners
+        bgMusic.addEventListener('play', () => {
+            isMusicPlaying = true;
+            updateMusicDisplay();
+        });
+        
+        bgMusic.addEventListener('pause', () => {
+            isMusicPlaying = false;
+            updateMusicDisplay();
+        });
+        
+        // Clean up on page unload
+        window.addEventListener('beforeunload', () => {
+            clearAllIntervals();
+            gameActive = false;
+        });
+        
+        // Initialize
+        createSnowEffect();
+    </script>
+</body>
+</html>
